@@ -1,7 +1,7 @@
-
 ```
 Your Interactive Learning Environment Bash Terminal
 
+start.sh
 $
 $ start.sh
 Starting Kubernetes...minikube version: v1.6.2
@@ -12,20 +12,78 @@ commit: 54f28ac5d3a815d1196cd5d57d707439ee4bb392
 * OS release is Ubuntu 18.04.3 LTS
 * Preparing Kubernetes v1.17.0 on Docker '18.09.7' ...
   - kubelet.resolv-conf=/run/systemd/resolve/resolv.conf
+
+
 * Pulling images ...
 * Launching Kubernetes ...
 * Configuring local host environment ...
 * Done! kubectl is now configured to use "minikube"
 * dashboard was successfully enabled
 Kubernetes Started
+$
+$
+$ kubectl create deployment najib-flask --image=najibun/nflask:v1
+deployment.apps/najib-flask created
+$ kubectl get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask   0/1     1            0           23s
+$ kubectl get pods
+NAME                           READY   STATUS              RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     ContainerCreating   0          53s
+$ kubectl get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask   0/1     1            0           106s
+$ kubectl get pods
+NAME                           READY   STATUS              RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     ContainerCreating   0          111s
+$ kubectl get pods
+NAME                           READY   STATUS              RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     ContainerCreating   0          3m3s
+$ kubectl get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask   0/1     1            0           3m22s
+$
+$ kubectl get pods
+NAME                           READY   STATUS             RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     ImagePullBackOff   0          4m47s
+$ kubectl get deployments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask   0/1     1            0           5m11s
+$ ^C
+$ ls -la
+total 56
+drwx------ 12 root root 4096 Jan  7 14:20 .
+drwxr-xr-x 25 root root 4096 Dec 17 13:44 ..
+-rw-r--r--  1 root root 3295 Dec 22 16:41 .bashrc
+drwx------  2 root root 4096 Jan  7 14:01 .cache
+drwxr-xr-x  8 root root 4096 Oct 23 10:16 .config
+drwxr-xr-x  2 root root 4096 Dec 17 13:53 Desktop
+drwxr-xr-x  2 root root 4096 Dec 22 16:38 .docker
+drwx------  3 root root 4096 Jan  7 14:01 .gnupg
+-rw-r--r--  1 root root    0 Dec 17 13:45 .hushlogin
+drwxr-xr-x  4 root root 4096 Jan  7 14:32 .kube
+drwxr-xr-x 10 root root 4096 Jan  7 14:29 .minikube
+-rw-r--r--  1 root root  148 Aug 17  2015 .profile
+drwxr-xr-x  2 root root 4096 Dec 17 13:43 .ssh
+drwxr-xr-x  2 root root 4096 Dec 22 16:38 .vnc
+drwxr-xr-x 11 root root 4096 Oct 23 10:13 .vscode
 $ ls
 Desktop
-$ mkdir nflesk
-$ cd nflesk/
+$ mkdir najib-flask
+$ cd najib-flask/
 $ vim app.py
-$ vim requirements.txt
-$ vim Dockerfile
-$  docker build -t najibun/nflask:v1 .
+$ nano app.py
+$ nano requirements.txt
+$ nano app.py
+$ nano Dockerfile
+$ docker build -t najibun/najib-flask:v1
+"docker build" requires exactly 1 argument.
+See 'docker build --help'.
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+$ docker build -t najibun/najib-flask:v1 .
 Sending build context to Docker daemon  4.096kB
 Step 1/6 : FROM python:2.7
 2.7: Pulling from library/python
@@ -42,13 +100,18 @@ Digest: sha256:9517f5314968111658d229ed3038630a174e7a4f1b852bd185b70f614dffba08
 Status: Downloaded newer image for python:2.7
  ---> 426ba9523d99
 Step 2/6 : COPY . /app
- ---> aea1ba40c2e5
+
+
+
+
+
+ ---> ea68a91965a8
 Step 3/6 : WORKDIR /app
- ---> Running in ef48a78106d8
-Removing intermediate container ef48a78106d8
- ---> c90a1e7b6850
+ ---> Running in 6118dfb39520
+Removing intermediate container 6118dfb39520
+ ---> 6314972fb461
 Step 4/6 : RUN pip install -r requirements.txt
- ---> Running in 86bf3a62023c
+ ---> Running in 8db465d9d731
 DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7. More details about Python 2 support in pip, can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support
 Collecting flask
   Downloading https://files.pythonhosted.org/packages/9b/93/628509b8d5dc749656a9641f4caf13540e2cdec85276964ff8f43bbb1d3b/Flask-1.1.1-py2.py3-none-any.whl (94kB)
@@ -72,20 +135,28 @@ Collecting MarkupSafe>=0.23
   Downloading https://files.pythonhosted.org/packages/fb/40/f3adb7cf24a8012813c5edb20329eb22d5d8e2a0ecf73d21d6b85865da11/MarkupSafe-1.1.1-cp27-cp27mu-manylinux1_x86_64.whl
 Installing collected packages: itsdangerous, MarkupSafe, Jinja2, click, Werkzeug, flask, aniso8601, pytz, six, flask-restful
 Successfully installed Jinja2-2.10.3 MarkupSafe-1.1.1 Werkzeug-0.16.0 aniso8601-8.0.0 click-7.0 flask-1.1.1 flask-restful-0.3.7 itsdangerous-1.1.0 pytz-2019.3 six-1.13.0
-Removing intermediate container 86bf3a62023c
- ---> a10ab84091f6
+Removing intermediate container 8db465d9d731
+ ---> 93b67b2daf09
 Step 5/6 : ENTRYPOINT ["python"]
- ---> Running in c8ffae8db188
-Removing intermediate container c8ffae8db188
- ---> 531f012c3edb
+ ---> Running in f279d8eef417
+Removing intermediate container f279d8eef417
+ ---> 23ebb1cfd318
 Step 6/6 : CMD ["app.py"]
- ---> Running in 4172abc89248
-Removing intermediate container 4172abc89248
- ---> 64619860d1bf
-Successfully built 64619860d1bf
-Successfully tagged najibun/nflask:v1
-$ docker images | grep flask
-najibun/nflask                                  v1                  64619860d1bf        8 seconds ago       903MB
+ ---> Running in c3b93bdb476b
+Removing intermediate container c3b93bdb476b
+ ---> 4d1dd1b457ca
+Successfully built 4d1dd1b457ca
+Successfully tagged najibun/najib-flask:v1
+$
+$
+$
+$
+$
+$ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: najibun
+Password:
+Error response from daemon: Get https://registry-1.docker.io/v2/: unauthorized: incorrect username or password
 $ docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
 Username: najibun
@@ -95,155 +166,85 @@ Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
-$ docker push najibun/nflask:v1
-The push refers to repository [docker.io/najibun/nflask]
-27d89e03f5ec: Preparing
-eb19432ac0ce: Preparing
-27d89e03f5ec: Pushed
-03a3dc679282: Mounted from library/python
-35fc403d4c4c: Mounted from library/python
-c1fbc35a2660: Mounted from library/python
-f63773c65620: Mounted from library/python
-e6d60910d056: Mounted from library/python
-b52c1c103fae: Mounted from library/python
-6f1c84e6ec59: Mounted from library/python
-dd5242c2dc8a: Mounted from library/python
-v1: digest: sha256:c8a79433e0ad5eaa5a829453e6f31a2960d395f663a98225af5a587ac27b07a8 size: 2639
-$ kubectl create deployment najib-flask --image=najibun/nflask:v1
-deployment.apps/najib-flask created
-$ kubectl get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-najib-flask   0/1     1            0           25s
-$ kubectl get pods
-NAME                           READY   STATUS             RESTARTS   AGE
-najib-flask-86bc877644-cbwx5   0/1     CrashLoopBackOff   2          42s
-$ kubectl get events
-LAST SEEN   TYPE      REASON                    OBJECT                              MESSAGE
-10m         Normal    NodeHasSufficientMemory   node/minikube                       Node minikube status is now: NodeHasSufficientMemory
-10m         Normal    NodeHasNoDiskPressure     node/minikube                       Node minikube status is now: NodeHasNoDiskPressure
-10m         Normal    NodeHasSufficientPID      node/minikube                       Node minikube status is now: NodeHasSufficientPID
-10m         Normal    Starting                  node/minikube                       Starting kubelet.
-10m         Normal    NodeHasSufficientMemory   node/minikube                       Node minikube status is now: NodeHasSufficientMemory
-10m         Normal    NodeHasNoDiskPressure     node/minikube                       Node minikube status is now: NodeHasNoDiskPressure
-10m         Normal    NodeHasSufficientPID      node/minikube                       Node minikube status is now: NodeHasSufficientPID
-10m         Normal    NodeAllocatableEnforced   node/minikube                       Updated Node Allocatable limit across pods
-10m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
-10m         Normal    Starting                  node/minikube                       Starting kube-proxy.
-10m         Normal    NodeReady                 node/minikube                       Node minikube status is now: NodeReady
-57s         Normal    Scheduled                 pod/najib-flask-86bc877644-cbwx5    Successfully assigned default/najib-flask-86bc877644-cbwx5 to minikube
-14s         Normal    Pulled                    pod/najib-flask-86bc877644-cbwx5    Container image "najibun/nflask:v1" already present on machine
-14s         Normal    Created                   pod/najib-flask-86bc877644-cbwx5    Created container nflask
-14s         Normal    Started                   pod/najib-flask-86bc877644-cbwx5    Started container nflask
-13s         Warning   BackOff                   pod/najib-flask-86bc877644-cbwx5    Back-off restarting failed container
-57s         Normal    SuccessfulCreate          replicaset/najib-flask-86bc877644   Created pod: najib-flask-86bc877644-cbwx5
-57s         Normal    ScalingReplicaSet         deployment/najib-flask              Scaled up replica set najib-flask-86bc877644 to 1
-$ kubectl config view
-apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority: /root/.minikube/ca.crt
-    server: https://172.17.0.110:8443
-  name: minikube
-contexts:
-- context:
-    cluster: minikube
-    user: minikube
-  name: minikube
-current-context: minikube
-kind: Config
-preferences: {}
-users:
-- name: minikube
-  user:
-    client-certificate: /root/.minikube/client.crt
-    client-key: /root/.minikube/client.key
-$ kubectl expose deployment python-flask --type=LoadBalancer --port=5000
-Error from server (NotFound): deployments.apps "python-flask" not found
-$ kubectl expose deployment najib-flask --type=LoadBalancer --port=5000
-service/najib-flask exposed
-$ kubectl get services
-NAME          TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes    ClusterIP      10.96.0.1      <none>        443/TCP          11m
-najib-flask   LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   16s
-$ kubectl get services
-NAME          TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes    ClusterIP      10.96.0.1      <none>        443/TCP          13m
-najib-flask   LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   2m20s
-$ kubectl get events
-LAST SEEN   TYPE      REASON                    OBJECT                              MESSAGE
-15m         Normal    NodeHasSufficientMemory   node/minikube                       Node minikube status is now: NodeHasSufficientMemory
-15m         Normal    NodeHasNoDiskPressure     node/minikube                       Node minikube status is now: NodeHasNoDiskPressure
-15m         Normal    NodeHasSufficientPID      node/minikube                       Node minikube status is now: NodeHasSufficientPID
-14m         Normal    Starting                  node/minikube                       Starting kubelet.
-14m         Normal    NodeHasSufficientMemory   node/minikube                       Node minikube status is now: NodeHasSufficientMemory
-14m         Normal    NodeHasNoDiskPressure     node/minikube                       Node minikube status is now: NodeHasNoDiskPressure
-14m         Normal    NodeHasSufficientPID      node/minikube                       Node minikube status is now: NodeHasSufficientPID
-14m         Normal    NodeAllocatableEnforced   node/minikube                       Updated Node Allocatable limit across pods
-14m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
-14m         Normal    Starting                  node/minikube                       Starting kube-proxy.
-14m         Normal    NodeReady                 node/minikube                       Node minikube status is now: NodeReady
-5m14s       Normal    Scheduled                 pod/najib-flask-86bc877644-cbwx5    Successfully assigned default/najib-flask-86bc877644-cbwx5 to minikube
-3m49s       Normal    Pulled                    pod/najib-flask-86bc877644-cbwx5    Container image "najibun/nflask:v1" already present on machine
-3m49s       Normal    Created                   pod/najib-flask-86bc877644-cbwx5    Created container nflask
-3m49s       Normal    Started                   pod/najib-flask-86bc877644-cbwx5    Started container nflask
-8s          Warning   BackOff                   pod/najib-flask-86bc877644-cbwx5    Back-off restarting failed container
-5m14s       Normal    SuccessfulCreate          replicaset/najib-flask-86bc877644   Created pod: najib-flask-86bc877644-cbwx5
-5m14s       Normal    ScalingReplicaSet         deployment/najib-flask              Scaled up replica set najib-flask-86bc877644 to 1
-$ kubectl get services
-NAME          TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes    ClusterIP      10.96.0.1      <none>        443/TCP          15m
-najib-flask   LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   3m39s
-$ kubectl get services
-NAME          TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes    ClusterIP      10.96.0.1      <none>        443/TCP          21m
-najib-flask   LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   10m
-$ kubectl get services
-NAME          TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes    ClusterIP      10.96.0.1      <none>        443/TCP          22m
-najib-flask   LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   10m
-$ kubectl create deployment python-flask --image=najibun/nflask:v1
+$ docker push najibun/najib-flask:v1
+The push refers to repository [docker.io/najibun/najib-flask]
+613bb191a9b4: Preparing
+f8ad675fd41c: Preparing
+613bb191a9b4: Pushed
+03a3dc679282: Mounted from najibun/nflask
+35fc403d4c4c: Mounted from najibun/nflask
+c1fbc35a2660: Mounted from najibun/nflask
+f63773c65620: Mounted from najibun/nflask
+e6d60910d056: Mounted from najibun/nflask
+b52c1c103fae: Mounted from najibun/nflask
+6f1c84e6ec59: Pushing [==================================================>]  17.11MB
+6f1c84e6ec59: Pushed
+dd5242c2dc8a: Pushed
+v1: digest: sha256:400802a6961982452ecdef3d4cf2f59f00fa12064ff563d5c042f64e467bfab6 size: 2639
+$
+$ kubectl create deployment python-flask --image=najibun/najib-flask:v1
 deployment.apps/python-flask created
 $ kubectl get deployments
 NAME           READY   UP-TO-DATE   AVAILABLE   AGE
-najib-flask    0/1     1            0           16m
-python-flask   0/1     1            0           16s
+najib-flask    0/1     1            0           31m
+python-flask   0/1     1            0           10s
+$ kubectl get deployments
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask    0/1     1            0           31m
+python-flask   0/1     1            0           51s
 $ kubectl get pods
-NAME                            READY   STATUS             RESTARTS   AGE
-najib-flask-86bc877644-cbwx5    0/1     CrashLoopBackOff   8          16m
-python-flask-67b6d69b56-c9rrl   0/1     CrashLoopBackOff   1          29s
+NAME                           READY   STATUS             RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     CrashLoopBackOff   6          32m
+python-flask-695494c48-ln7zd   0/1     Pending            0          114s
+$ kubectl get pods
+NAME                           READY   STATUS             RESTARTS   AGE
+najib-flask-86bc877644-k79lz   0/1     CrashLoopBackOff   7          36m
+python-flask-695494c48-ln7zd   1/1     Running            0          5m24s
+$ kubectl get deployments
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+najib-flask    0/1     1            0           36m
+python-flask   1/1     1            1           5m52s
 $ kubectl get events
-LAST SEEN   TYPE      REASON                    OBJECT                               MESSAGE
-27m         Normal    NodeHasSufficientMemory   node/minikube                        Node minikube status is now: NodeHasSufficientMemory
-27m         Normal    NodeHasNoDiskPressure     node/minikube                        Node minikube status is now: NodeHasNoDiskPressure
-27m         Normal    NodeHasSufficientPID      node/minikube                        Node minikube status is now: NodeHasSufficientPID
-26m         Normal    Starting                  node/minikube                        Starting kubelet.
-26m         Normal    NodeHasSufficientMemory   node/minikube                        Node minikube status is now: NodeHasSufficientMemory
-26m         Normal    NodeHasNoDiskPressure     node/minikube                        Node minikube status is now: NodeHasNoDiskPressure
-26m         Normal    NodeHasSufficientPID      node/minikube                        Node minikube status is now: NodeHasSufficientPID
-26m         Normal    NodeAllocatableEnforced   node/minikube                        Updated Node Allocatable limit across pods
-26m         Normal    RegisteredNode            node/minikube                        Node minikube event: Registered Node minikube in Controller
-26m         Normal    Starting                  node/minikube                        Starting kube-proxy.
-26m         Normal    NodeReady                 node/minikube                        Node minikube status is now: NodeReady
-17m         Normal    Scheduled                 pod/najib-flask-86bc877644-cbwx5     Successfully assigned default/najib-flask-86bc877644-cbwx5 to minikube
-15m         Normal    Pulled                    pod/najib-flask-86bc877644-cbwx5     Container image "najibun/nflask:v1" already present on machine
-15m         Normal    Created                   pod/najib-flask-86bc877644-cbwx5     Created container nflask
-15m         Normal    Started                   pod/najib-flask-86bc877644-cbwx5     Started container nflask
-2m8s        Warning   BackOff                   pod/najib-flask-86bc877644-cbwx5     Back-off restarting failed container
-17m         Normal    SuccessfulCreate          replicaset/najib-flask-86bc877644    Created pod: najib-flask-86bc877644-cbwx5
-17m         Normal    ScalingReplicaSet         deployment/najib-flask               Scaled up replica set najib-flask-86bc877644 to 1
-45s         Normal    Scheduled                 pod/python-flask-67b6d69b56-c9rrl    Successfully assigned default/python-flask-67b6d69b56-c9rrl to minikube
-10s         Normal    Pulled                    pod/python-flask-67b6d69b56-c9rrl    Container image "najibun/nflask:v1" already present on machine
-9s          Normal    Created                   pod/python-flask-67b6d69b56-c9rrl    Created container nflask
-7s          Normal    Started                   pod/python-flask-67b6d69b56-c9rrl    Started container nflask
-2s          Warning   BackOff                   pod/python-flask-67b6d69b56-c9rrl    Back-off restarting failed container
-45s         Normal    SuccessfulCreate          replicaset/python-flask-67b6d69b56   Created pod: python-flask-67b6d69b56-c9rrl
-45s         Normal    ScalingReplicaSet         deployment/python-flask              Scaled up replica set python-flask-67b6d69b56 to 1
+LAST SEEN   TYPE      REASON                    OBJECT                              MESSAGE
+38m         Normal    Starting                  node/minikube                       Starting kubelet.
+38m         Normal    NodeHasSufficientMemory   node/minikube                       Node minikube status is now: NodeHasSufficientMemory
+38m         Normal    NodeHasNoDiskPressure     node/minikube                       Node minikube status is now: NodeHasNoDiskPressure
+38m         Normal    NodeHasSufficientPID      node/minikube                       Node minikube status is now: NodeHasSufficientPID
+38m         Normal    NodeNotReady              node/minikube                       Node minikube status is now: NodeNotReady
+38m         Normal    NodeAllocatableEnforced   node/minikube                       Updated Node Allocatable limit across pods
+38m         Normal    NodeReady                 node/minikube                       Node minikube status is now: NodeReady
+37m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+37m         Normal    Starting                  node/minikube                       Starting kube-proxy.
+28m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+19m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+17m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+14m         Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+8m23s       Normal    RegisteredNode            node/minikube                       Node minikube event: Registered Node minikube in Controller
+37m         Normal    Scheduled                 pod/najib-flask-86bc877644-k79lz    Successfully assigned default/najib-flask-86bc877644-k79lz to minikube
+18m         Normal    Pulling                   pod/najib-flask-86bc877644-k79lz    Pulling image "najibun/nflask:v1"
+18m         Warning   Failed                    pod/najib-flask-86bc877644-k79lz    Failed to pull image "najibun/nflask:v1": rpc error: code = Unknown desc = context canceled
+18m         Warning   Failed                    pod/najib-flask-86bc877644-k79lz    Error: ErrImagePull
+18m         Normal    BackOff                   pod/najib-flask-86bc877644-k79lz    Back-off pulling image "najibun/nflask:v1"
+18m         Warning   Failed                    pod/najib-flask-86bc877644-k79lz    Error: ImagePullBackOff
+16m         Normal    Pulled                    pod/najib-flask-86bc877644-k79lz    Successfully pulled image "najibun/nflask:v1"
+15m         Normal    Created                   pod/najib-flask-86bc877644-k79lz    Created container nflask
+15m         Normal    Started                   pod/najib-flask-86bc877644-k79lz    Started container nflask
+15m         Normal    Pulled                    pod/najib-flask-86bc877644-k79lz    Container image "najibun/nflask:v1" already present on machine
+111s        Warning   BackOff                   pod/najib-flask-86bc877644-k79lz    Back-off restarting failed container
+37m         Normal    SuccessfulCreate          replicaset/najib-flask-86bc877644   Created pod: najib-flask-86bc877644-k79lz
+37m         Normal    ScalingReplicaSet         deployment/najib-flask              Scaled up replica set najib-flask-86bc877644 to 1
+<unknown>   Normal    Scheduled                 pod/python-flask-695494c48-ln7zd    Successfully assigned default/python-flask-695494c48-ln7zd to minikube
+3m31s       Normal    Pulled                    pod/python-flask-695494c48-ln7zd    Container image "najibun/najib-flask:v1" already present on machine
+3m30s       Normal    Created                   pod/python-flask-695494c48-ln7zd    Created container najib-flask
+3m29s       Normal    Started                   pod/python-flask-695494c48-ln7zd    Started container najib-flask
+6m6s        Normal    SuccessfulCreate          replicaset/python-flask-695494c48   Created pod: python-flask-695494c48-ln7zd
+6m7s        Normal    ScalingReplicaSet         deployment/python-flask             Scaled up replica set python-flask-695494c48 to 1
 $ kubectl config view
 apiVersion: v1
 clusters:
 - cluster:
     certificate-authority: /root/.minikube/ca.crt
-    server: https://172.17.0.110:8443
+    server: https://172.17.0.147:8443
   name: minikube
 contexts:
 - context:
@@ -262,237 +263,8 @@ $ kubectl expose deployment python-flask --type=LoadBalancer --port=5000
 service/python-flask exposed
 $ kubectl get services
 NAME           TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes     ClusterIP      10.96.0.1      <none>        443/TCP          28m
-najib-flask    LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   16m
-python-flask   LoadBalancer   10.96.92.81    <pending>     5000:30540/TCP   15s
-$ kubectl get services
-NAME           TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes     ClusterIP      10.96.0.1      <none>        443/TCP          28m
-najib-flask    LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   17m
-python-flask   LoadBalancer   10.96.92.81    <pending>     5000:30540/TCP   53s
-$ docker images
-REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
-najibun/nflask                                  v1                  64619860d1bf        28 minutes ago      903MB
-python                                          2.7                 426ba9523d99        10 days ago         896MB
-k8s.gcr.io/kube-proxy                           v1.17.0             7d54289267dc        4 weeks ago         116MB
-k8s.gcr.io/kube-scheduler                       v1.17.0             78c190f736b1        4 weeks ago         94.4MB
-k8s.gcr.io/kube-controller-manager              v1.17.0             5eb3b7486872        4 weeks ago         161MB
-k8s.gcr.io/kube-apiserver                       v1.17.0             0cae8d5cc64c        4 weeks ago         171MB
-kubernetesui/dashboard                          v2.0.0-beta8        eb51a3597525        4 weeks ago         90.8MB
-redis                                           latest              dcf9ec9265e0        6 weeks ago         98.2MB
-k8s.gcr.io/coredns                              1.6.5               70f311871ae1        2 months ago        41.6MB
-ubuntu                                          latest              775349758637        2 months ago        64.2MB
-k8s.gcr.io/etcd                                 3.4.3-0             303ce5db0e90        2 months ago        288MB
-kubernetesui/metrics-scraper                    v1.0.2              3b08661dc379        2 months ago        40.1MB
-alpine                                          latest              965ea09ff2eb        2 months ago        5.55MB
-weaveworks/scope                                1.11.4              a082d48f0b39        5 months ago        78.5MB
-k8s.gcr.io/kube-addon-manager                   v9.0.2              bd12a212f9dc        5 months ago        83.1MB
-quay.io/ansible/molecule                        2.20                1171569d6ba4        9 months ago        704MB
-weaveworks/scope                                1.10.2              d9ece03f45e7        10 months ago       75.8MB
-k8s.gcr.io/kube-addon-manager                   v9.0                119701e77cbc        11 months ago       83.1MB
-k8s.gcr.io/coredns                              1.3.1               eb516548c180        11 months ago       40.3MB
-k8s.gcr.io/kubernetes-dashboard-amd64           v1.10.1             f9aed6605b81        12 months ago       122MB
-k8s.gcr.io/etcd                                 3.3.10              2c4adeb21b4f        13 months ago       258MB
-gcr.io/hello-minikube-zero-install/hello-node   latest              14f0c79cd094        14 months ago       655MB
-gcr.io/kubernetes-helm/tiller                   v2.10.0             0cccc6576d01        16 months ago       68.9MB
-k8s.gcr.io/heapster-amd64                       v1.5.3              f57c75cd7b0a        20 months ago       75.3MB
-k8s.gcr.io/pause                                3.1                 da86e6ba6ca1        2 years ago         742kB
-gcr.io/k8s-minikube/storage-provisioner         v1.8.1              4689081edb10        2 years ago         80.8MB
-k8s.gcr.io/heapster-influxdb-amd64              v1.3.3              577260d221db        2 years ago         12.5MB
-k8s.gcr.io/heapster-grafana-amd64               v4.4.3              8cb3de219af7        2 years ago         152MB
-quay.io/munnerz/keepalived-cloud-provider       0.0.1               e099e9cd14a0        2 years ago         127MB
-redis                                           3.0.7-alpine        856249f48b0c        2 years ago         12.6MB
-gcr.io/google_containers/kube-keepalived-vip    0.9                 959a1b4b8b0f        3 years ago         142MB
-jocatalin/kubernetes-bootcamp                   v2                  b6556396ebd4        3 years ago         211MB
-jocatalin/kubernetes-bootcamp                   v1                  8fafd8af70e9        3 years ago         211MB
-gcr.io/google-samples/kubernetes-bootcamp       v1                  8fafd8af70e9        3 years ago         211MB
-gcr.io/google_containers/echoserver             1.4                 a90209bb39e3        3 years ago         140MB
-gcr.io/google-samples/gb-frontend               v3                  c038466384ab        4 years ago         510MB
-gcr.io/google_samples/gb-redisslave             v1                  5f026ddffa27        4 years ago         109MB
-$ docker images |grep flask
-najibun/nflask                                  v1                  64619860d1bf        28 minutes ago      903MB
-$ kubectl get services
-NAME           TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-kubernetes     ClusterIP      10.96.0.1      <none>        443/TCP          35m
-najib-flask    LoadBalancer   10.96.112.91   <pending>     5000:32207/TCP   23m
-python-flask   LoadBalancer   10.96.92.81    <pending>     5000:30540/TCP   7m25s
-$ kubctl get pods
-
-Command 'kubctl' not found, did you mean:
-
-  command 'kubectl' from snap kubectl (1.17.0)
-
-See 'snap info <snapname>' for additional versions.
-
-$ kubectl get pods
-NAME                            READY   STATUS             RESTARTS   AGE
-najib-flask-86bc877644-cbwx5    0/1     Error              10         26m
-python-flask-67b6d69b56-c9rrl   0/1     CrashLoopBackOff   6          9m57s
-$ kubectl
-kubectl controls the Kubernetes cluster manager.
-
- Find more information at: https://kubernetes.io/docs/reference/kubectl/overview/
-
-Basic Commands (Beginner):
-  create         Create a resource from a file or from stdin.
-  expose         Take a replication controller, service, deployment or pod and expose it as a new Kubernetes Service
-  run            Run a particular image on the cluster
-  set            Set specific features on objects
-
-Basic Commands (Intermediate):
-  explain        Documentation of resources
-  get            Display one or many resources
-  edit           Edit a resource on the server
-  delete         Delete resources by filenames, stdin, resources and names, or by resources and label selector
-
-Deploy Commands:
-  rollout        Manage the rollout of a resource
-  scale          Set a new size for a Deployment, ReplicaSet or Replication Controller
-  autoscale      Auto-scale a Deployment, ReplicaSet, or ReplicationController
-
-Cluster Management Commands:
-  certificate    Modify certificate resources.
-  cluster-info   Display cluster info
-  top            Display Resource (CPU/Memory/Storage) usage.
-  cordon         Mark node as unschedulable
-  uncordon       Mark node as schedulable
-  drain          Drain node in preparation for maintenance
-  taint          Update the taints on one or more nodes
-
-Troubleshooting and Debugging Commands:
-  describe       Show details of a specific resource or group of resources
-  logs           Print the logs for a container in a pod
-  attach         Attach to a running container
-  exec           Execute a command in a container
-  port-forward   Forward one or more local ports to a pod
-  proxy          Run a proxy to the Kubernetes API server
-  cp             Copy files and directories to and from containers.
-  auth           Inspect authorization
-
-Advanced Commands:
-  diff           Diff live version against would-be applied version
-  apply          Apply a configuration to a resource by filename or stdin
-  patch          Update field(s) of a resource using strategic merge patch
-  replace        Replace a resource by filename or stdin
-  wait           Experimental: Wait for a specific condition on one or many resources.
-  convert        Convert config files between different API versions
-  kustomize      Build a kustomization target from a directory or a remote url.
-
-Settings Commands:
-  label          Update the labels on a resource
-  annotate       Update the annotations on a resource
-  completion     Output shell completion code for the specified shell (bash or zsh)
-
-Other Commands:
-  api-resources  Print the supported API resources on the server
-  api-versions   Print the supported API versions on the server, in the form of "group/version"
-  config         Modify kubeconfig files
-  plugin         Provides utilities for interacting with plugins.
-  version        Print the client and server version information
-
-Usage:
-  kubectl [flags] [options]
-
-Use "kubectl <command> --help" for more information about a given command.
-Use "kubectl options" for a list of global command-line options (applies to all commands).
-$ kubectl --help
-kubectl controls the Kubernetes cluster manager.
-
- Find more information at: https://kubernetes.io/docs/reference/kubectl/overview/
-
-Basic Commands (Beginner):
-  create         Create a resource from a file or from stdin.
-  expose         Take a replication controller, service, deployment or pod and expose it as a new Kubernetes Service
-  run            Run a particular image on the cluster
-  set            Set specific features on objects
-
-Basic Commands (Intermediate):
-  explain        Documentation of resources
-  get            Display one or many resources
-  edit           Edit a resource on the server
-  delete         Delete resources by filenames, stdin, resources and names, or by resources and label selector
-
-Deploy Commands:
-  rollout        Manage the rollout of a resource
-  scale          Set a new size for a Deployment, ReplicaSet or Replication Controller
-  autoscale      Auto-scale a Deployment, ReplicaSet, or ReplicationController
-
-Cluster Management Commands:
-  certificate    Modify certificate resources.
-  cluster-info   Display cluster info
-  top            Display Resource (CPU/Memory/Storage) usage.
-  cordon         Mark node as unschedulable
-  uncordon       Mark node as schedulable
-  drain          Drain node in preparation for maintenance
-  taint          Update the taints on one or more nodes
-
-Troubleshooting and Debugging Commands:
-  describe       Show details of a specific resource or group of resources
-  logs           Print the logs for a container in a pod
-  attach         Attach to a running container
-  exec           Execute a command in a container
-  port-forward   Forward one or more local ports to a pod
-  proxy          Run a proxy to the Kubernetes API server
-  cp             Copy files and directories to and from containers.
-  auth           Inspect authorization
-
-Advanced Commands:
-  diff           Diff live version against would-be applied version
-  apply          Apply a configuration to a resource by filename or stdin
-  patch          Update field(s) of a resource using strategic merge patch
-  replace        Replace a resource by filename or stdin
-  wait           Experimental: Wait for a specific condition on one or many resources.
-  convert        Convert config files between different API versions
-  kustomize      Build a kustomization target from a directory or a remote url.
-
-Settings Commands:
-  label          Update the labels on a resource
-  annotate       Update the annotations on a resource
-  completion     Output shell completion code for the specified shell (bash or zsh)
-
-Other Commands:
-  api-resources  Print the supported API resources on the server
-  api-versions   Print the supported API versions on the server, in the form of "group/version"
-  config         Modify kubeconfig files
-  plugin         Provides utilities for interacting with plugins.
-  version        Print the client and server version information
-
-Usage:
-  kubectl [flags] [options]
-
-Use "kubectl <command> --help" for more information about a given command.
-Use "kubectl options" for a list of global command-line options (applies to all commands).
-$ kubectl create deployment python-flask-beda --image=lindaagustina/python-flask:v1
-deployment.apps/python-flask-beda created
-$ kubectl get deployments
-NAME                READY   UP-TO-DATE   AVAILABLE   AGE
-najib-flask         0/1     1            0           28m
-python-flask        0/1     1            0           11m
-python-flask-beda   0/1     1            0           15s
-$ kubectl get pods
-NAME                                 READY   STATUS              RESTARTS   AGE
-najib-flask-86bc877644-cbwx5         0/1     CrashLoopBackOff    10         28m
-python-flask-67b6d69b56-c9rrl        0/1     CrashLoopBackOff    7          11m
-python-flask-beda-68cd94fc76-k9gpj   0/1     ContainerCreating   0          26s
-$ kubectl get pods
-^[[A\NAME                                 READY   STATUS              RESTARTS   AGE
-najib-flask-86bc877644-cbwx5         0/1     CrashLoopBackOff    10         28m
-python-flask-67b6d69b56-c9rrl        0/1     CrashLoopBackOff    7          12m
-python-flask-beda-68cd94fc76-k9gpj   0/1     ContainerCreating   0          48s
-\$kubectl get pods
-NAME                                 READY   STATUS              RESTARTS   AGE
-najib-flask-86bc877644-cbwx5         0/1     CrashLoopBackOff    10         29m
-python-flask-67b6d69b56-c9rrl        0/1     CrashLoopBackOff    7          12m
-python-flask-beda-68cd94fc76-k9gpj   0/1     ContainerCreating   0          65s
-$ kubectl get pods
-NAME                                 READY   STATUS              RESTARTS   AGE
-najib-flask-86bc877644-cbwx5         0/1     CrashLoopBackOff    10         30m
-python-flask-67b6d69b56-c9rrl        0/1     CrashLoopBackOff    7          14m
-python-flask-beda-68cd94fc76-k9gpj   0/1     ContainerCreating   0          2m49s
-$ kubectl get pods
-NAME                                 READY   STATUS             RESTARTS   AGE
-najib-flask-86bc877644-cbwx5         0/1     CrashLoopBackOff   11         34m
-python-flask-67b6d69b56-c9rrl        0/1     CrashLoopBackOff   8          17m
-python-flask-beda-68cd94fc76-k9gpj   1/1     Running            0          6m12s
+kubernetes     ClusterIP      10.96.0.1      <none>        443/TCP          39m
+python-flask   LoadBalancer   10.96.35.208   <pending>     5000:31462/TCP   13s
 $
 ```
+![](img.png)
